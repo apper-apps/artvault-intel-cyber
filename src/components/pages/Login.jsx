@@ -88,11 +88,21 @@ const Login = () => {
           </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg shadow-sm border border-gray-200 p-8"
+<motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ 
+            delay: 0.1,
+            duration: 0.3,
+            ease: [0.4, 0, 0.2, 1],
+            type: "tween"
+          }}
+          style={{
+            transform: 'translateZ(0)',
+            willChange: 'transform, opacity',
+            backfaceVisibility: 'hidden'
+          }}
+          className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 resize-observer-optimized"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input

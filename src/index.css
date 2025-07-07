@@ -79,7 +79,10 @@ html {
 /* Suppress ResizeObserver errors for non-critical layout changes */
 .resize-observer-optimized {
   contain: layout style paint;
-  will-change: transform;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  isolation: isolate;
 }
 
 /* Optimize framer-motion animations */
@@ -87,10 +90,26 @@ html {
   will-change: transform, opacity;
   backface-visibility: hidden;
   transform: translateZ(0);
+  contain: layout style;
 }
 
 /* Prevent layout thrashing during animations */
 .motion-safe {
   transform: translateZ(0);
   will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Global ResizeObserver error suppression */
+.resize-observer-suppress {
+  contain: layout style paint;
+  transform: translateZ(0);
+}
+
+/* Animation performance optimization */
+.animate-optimized {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout;
 }
