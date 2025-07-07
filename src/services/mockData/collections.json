@@ -1,0 +1,34 @@
+[
+  {
+    "Id": 1,
+    "name": "Nature Series",
+    "description": "Artworks inspired by natural landscapes and organic forms",
+    "color": "#10b981",
+    "artworkCount": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Urban Explorations",
+    "description": "City life and architectural studies",
+    "color": "#6366f1",
+    "artworkCount": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Color Studies",
+    "description": "Experimental work focusing on color theory and relationships",
+    "color": "#f59e0b",
+    "artworkCount": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Digital Works",
+    "description": "Video art and digital media experiments",
+    "color": "#ef4444",
+    "artworkCount": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  }
+]

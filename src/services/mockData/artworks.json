@@ -1,0 +1,116 @@
+[
+  {
+    "Id": 1,
+    "title": "Sunset Reflections",
+    "mediaUrl": "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop",
+    "mediaType": "image",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=200&fit=crop",
+    "date": "2024-01-15",
+    "dimensions": {
+      "width": 24,
+      "height": 18,
+      "depth": 0,
+      "unit": "inches"
+    },
+    "owner": "Personal Collection",
+    "collectionId": "1",
+    "notes": "Oil on canvas piece exploring the interplay of light and water. Inspired by evening walks along the coastline.",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "Id": 2,
+    "title": "Urban Geometry",
+    "mediaUrl": "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&h=600&fit=crop",
+    "mediaType": "image",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1549490349-8643362247b5?w=300&h=200&fit=crop",
+    "date": "2024-01-10",
+    "dimensions": {
+      "width": 20,
+      "height": 16,
+      "depth": 0,
+      "unit": "inches"
+    },
+    "owner": "Available for Sale",
+    "collectionId": "2",
+    "notes": "Mixed media exploration of architectural forms and shadows in the urban environment.",
+    "createdAt": "2024-01-10T14:30:00Z",
+    "updatedAt": "2024-01-10T14:30:00Z"
+  },
+  {
+    "Id": 3,
+    "title": "Forest Dreams",
+    "mediaUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop",
+    "mediaType": "image",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop",
+    "date": "2024-01-05",
+    "dimensions": {
+      "width": 30,
+      "height": 24,
+      "depth": 0,
+      "unit": "inches"
+    },
+    "owner": "Johnson Gallery",
+    "collectionId": "1",
+    "notes": "Large-scale acrylic painting capturing the mystical atmosphere of ancient forests.",
+    "createdAt": "2024-01-05T09:15:00Z",
+    "updatedAt": "2024-01-05T09:15:00Z"
+  },
+  {
+    "Id": 4,
+    "title": "Color Study #1",
+    "mediaUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+    "mediaType": "image",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop",
+    "date": "2023-12-28",
+    "dimensions": {
+      "width": 12,
+      "height": 9,
+      "depth": 0,
+      "unit": "inches"
+    },
+    "owner": "Personal Collection",
+    "collectionId": "3",
+    "notes": "Small watercolor study exploring warm and cool color relationships.",
+    "createdAt": "2023-12-28T16:45:00Z",
+    "updatedAt": "2023-12-28T16:45:00Z"
+  },
+  {
+    "Id": 5,
+    "title": "Motion Blur",
+    "mediaUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4",
+    "mediaType": "video",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1517999144091-3d9dca6d1e43?w=300&h=200&fit=crop",
+    "date": "2023-12-20",
+    "dimensions": {
+      "width": 1920,
+      "height": 1080,
+      "depth": 0,
+      "unit": "pixels"
+    },
+    "owner": "Digital Archive",
+    "collectionId": "4",
+    "notes": "Video art piece exploring movement and time through digital manipulation.",
+    "createdAt": "2023-12-20T11:20:00Z",
+    "updatedAt": "2023-12-20T11:20:00Z"
+  },
+  {
+    "Id": 6,
+    "title": "Portrait Study",
+    "mediaUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+    "mediaType": "image",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop",
+    "date": "2023-12-15",
+    "dimensions": {
+      "width": 16,
+      "height": 20,
+      "depth": 0,
+      "unit": "inches"
+    },
+    "owner": "Miller Collection",
+    "collectionId": "2",
+    "notes": "Charcoal drawing focusing on light and shadow techniques.",
+    "createdAt": "2023-12-15T13:10:00Z",
+    "updatedAt": "2023-12-15T13:10:00Z"
+  }
+]
