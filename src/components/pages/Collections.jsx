@@ -92,7 +92,7 @@ const Collections = () => {
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {collections.map((collection, index) => (
+{collections.map((collection, index) => (
           <motion.div
             key={collection.Id}
             initial={{ opacity: 0, y: 20 }}
@@ -108,12 +108,12 @@ const Collections = () => {
                     style={{ backgroundColor: collection.color }}
                   />
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {collection.name}
+                    {collection.Name}
                   </h3>
                 </div>
                 
                 <Badge variant="default">
-                  {collection.artworkCount} artwork{collection.artworkCount !== 1 ? 's' : ''}
+                  {collection.artwork_count} artwork{collection.artwork_count !== 1 ? 's' : ''}
                 </Badge>
               </div>
               
@@ -123,7 +123,7 @@ const Collections = () => {
               
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-500">
-                  Created {new Date(collection.createdAt).toLocaleDateString()}
+                  Created {new Date(collection.created_at).toLocaleDateString()}
                 </span>
                 
                 <div className="flex items-center space-x-2">
