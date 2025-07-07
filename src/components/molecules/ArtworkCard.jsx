@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { format } from 'date-fns';
-import ApperIcon from '@/components/ApperIcon';
-import Badge from '@/components/atoms/Badge';
+import React from "react";
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
 
 const ArtworkCard = ({ artwork, onClick }) => {
   // Safe destructuring with fallback values to prevent null/undefined errors
@@ -16,22 +16,40 @@ const ArtworkCard = ({ artwork, onClick }) => {
     mediaType = 'image'
   } = artwork || {};
 
+// Early return if artwork is null/undefined to prevent React errors
+  if (!artwork || typeof artwork !== 'object') {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+        <div className="text-gray-500 text-center">Invalid artwork data</div>
+      </div>
+    );
+  }
+
   const formatDimensions = (dims) => {
-    // Add null safety checks for dimensions object
+    // Enhanced null safety checks for dimensions object
     if (!dims || typeof dims !== 'object') {
       return '';
     }
     
-    const width = dims.width || 0;
-    const height = dims.height || 0;
-    const depth = dims.depth || 0;
-    const unit = dims.unit || 'inches';
+    const width = dims.width || dims.dimensions_width || 0;
+    const height = dims.height || dims.dimensions_height || 0;
+    const depth = dims.depth || dims.dimensions_depth || 0;
+    const unit = dims.unit || dims.dimensions_unit || 'inches';
     
     if (depth && depth > 0) {
       return `${width} × ${height} × ${depth} ${unit}`;
     }
     return `${width} × ${height} ${unit}`;
   };
+
+  // Safe property access with fallbacks
+  const title = artwork.title || artwork.Name || 'Untitled';
+  const mediaUrl = artwork.media_url || artwork.mediaUrl || '';
+  const thumbnailUrl = artwork.thumbnail_url || artwork.thumbnailUrl || mediaUrl;
+  const date = artwork.date || artwork.createdAt || '';
+  const notes = artwork.notes || '';
+  const owner = artwork.Owner?.Name || artwork.owner || '';
+  const tags = artwork.Tags || artwork.tags || '';
 
   return (
     <motion.div
