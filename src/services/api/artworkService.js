@@ -1,8 +1,4 @@
 import { toast } from "react-toastify";
-import React from "react";
-import Error from "@/components/ui/Error";
-import { create, getAll, getById, update } from "@/services/api/userService";
-
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const artworkService = {
@@ -302,14 +298,13 @@ export const artworkService = {
         
         return successfulDeletions.length > 0;
       }
-      
-      return true;
 return true;
     } catch (error) {
       console.error("Error deleting artwork:", error);
       toast.error("Failed to delete artwork");
       return false;
     }
+  },
 
   async getByCollectionId(collectionId) {
     await delay(300);
