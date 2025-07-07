@@ -52,11 +52,45 @@ body {
   background-color: #fafafa;
   color: #1a1a1a;
 }
-
 * {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Optimize animations to prevent ResizeObserver loops */
+.animate-spin {
+  animation: spin 1s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    transform: rotate(360deg) translateZ(0);
+  }
+}
+
+/* Suppress ResizeObserver errors for non-critical layout changes */
+.resize-observer-optimized {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+/* Optimize framer-motion animations */
+[data-framer-motion] {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Prevent layout thrashing during animations */
+.motion-safe {
+  transform: translateZ(0);
+  will-change: transform;
 }

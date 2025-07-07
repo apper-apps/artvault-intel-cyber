@@ -211,16 +211,20 @@ const Register = () => {
               helperText="Separate multiple specialties with commas"
             />
 
-            <Button
+<Button
               type="submit"
               variant="primary"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2"
+              className="w-full flex items-center justify-center space-x-2 resize-observer-optimized"
             >
               {loading ? (
                 <>
-                  <ApperIcon name="Loader2" className="w-4 h-4 animate-spin" />
-                  <span>Creating account...</span>
+                  <ApperIcon 
+                    name="Loader2" 
+                    className="w-4 h-4 animate-spin-optimized will-change-transform" 
+                    style={{ transform: 'translateZ(0)' }}
+                  />
+                  <span className="motion-safe">Creating account...</span>
                 </>
               ) : (
                 <>

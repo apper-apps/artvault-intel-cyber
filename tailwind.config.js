@@ -21,14 +21,24 @@ export default {
         display: ['DM Serif Display', 'serif'],
         body: ['Inter', 'sans-serif'],
       },
-      animation: {
+animation: {
         'shimmer': 'shimmer 2s linear infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'spin-optimized': 'spin-optimized 1s linear infinite',
+        'fade-in': 'fade-in 0.3s ease-out forwards',
       },
       keyframes: {
         shimmer: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
+          '0%': { transform: 'translateX(-100%) translateZ(0)' },
+          '100%': { transform: 'translateX(100%) translateZ(0)' },
+        },
+        'spin-optimized': {
+          '0%': { transform: 'rotate(0deg) translateZ(0)' },
+          '100%': { transform: 'rotate(360deg) translateZ(0)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px) translateZ(0)' },
+          '100%': { opacity: '1', transform: 'translateY(0) translateZ(0)' },
         },
       },
     },
