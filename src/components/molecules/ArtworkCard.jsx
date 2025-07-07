@@ -5,13 +5,32 @@ import ApperIcon from '@/components/ApperIcon';
 import Badge from '@/components/atoms/Badge';
 
 const ArtworkCard = ({ artwork, onClick }) => {
-  const { title, thumbnailUrl, date, dimensions, owner, collection, mediaType } = artwork;
+  // Safe destructuring with fallback values to prevent null/undefined errors
+  const {
+    title = '',
+    thumbnailUrl = '',
+    date = null,
+    dimensions = null,
+    owner = '',
+    collection = null,
+    mediaType = 'image'
+  } = artwork || {};
 
   const formatDimensions = (dims) => {
-    if (dims.depth && dims.depth > 0) {
-      return `${dims.width} × ${dims.height} × ${dims.depth} ${dims.unit}`;
+    // Add null safety checks for dimensions object
+    if (!dims || typeof dims !== 'object') {
+      return '';
     }
-    return `${dims.width} × ${dims.height} ${dims.unit}`;
+    
+    const width = dims.width || 0;
+    const height = dims.height || 0;
+    const depth = dims.depth || 0;
+    const unit = dims.unit || 'inches';
+    
+    if (depth && depth > 0) {
+      return `${width} × ${height} × ${depth} ${unit}`;
+    }
+    return `${width} × ${height} ${unit}`;
   };
 
   return (
@@ -44,15 +63,15 @@ const ArtworkCard = ({ artwork, onClick }) => {
           {title}
         </h3>
         
-        <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+<div className="flex items-center justify-between text-sm text-gray-600 mb-3">
           <span>{date ? format(new Date(date), 'MMM d, yyyy') : 'No date'}</span>
-          <span className="text-xs">{formatDimensions(dimensions || {})}</span>
+          <span className="text-xs">{formatDimensions(dimensions)}</span>
         </div>
         
-        <div className="flex items-center justify-between">
+<div className="flex items-center justify-between">
           <span className="text-sm text-gray-500 truncate flex-1">{owner || 'Unknown'}</span>
-          {collection && (
-            <Badge color={collection.color} className="ml-2 flex-shrink-0">
+          {collection && collection.name && (
+            <Badge color={collection.color || 'gray'} className="ml-2 flex-shrink-0">
               {collection.name}
             </Badge>
           )}
