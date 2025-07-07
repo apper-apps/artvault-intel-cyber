@@ -8,8 +8,9 @@ import Select from '@/components/atoms/Select';
 import TextArea from '@/components/atoms/TextArea';
 import FileUpload from '@/components/molecules/FileUpload';
 import { collectionService } from '@/services/api/collectionService';
-
+import { useAuth } from '@/context/AuthContext';
 const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
+const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     mediaUrl: '',
@@ -24,7 +25,8 @@ const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
     },
     owner: '',
     collectionId: '',
-    notes: ''
+    notes: '',
+    artistId: user?.Id || ''
   });
 
   const [collections, setCollections] = useState([]);
@@ -36,7 +38,7 @@ const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
   }, []);
 
   useEffect(() => {
-    if (artwork) {
+if (artwork) {
       setFormData({
         title: artwork.title || '',
         mediaUrl: artwork.mediaUrl || '',
@@ -51,10 +53,11 @@ const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
         },
         owner: artwork.owner || '',
         collectionId: artwork.collectionId || '',
-        notes: artwork.notes || ''
+        notes: artwork.notes || '',
+        artistId: artwork.artistId || user?.Id || ''
       });
     }
-  }, [artwork]);
+  }, [artwork, user]);
 
   const loadCollections = async () => {
     try {
@@ -111,10 +114,11 @@ const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
         thumbnailUrl = URL.createObjectURL(selectedFile);
       }
 
-      const submissionData = {
+const submissionData = {
         ...formData,
         mediaUrl,
         thumbnailUrl,
+        artistId: user?.Id || formData.artistId,
         dimensions: {
           ...formData.dimensions,
           width: parseFloat(formData.dimensions.width),
@@ -122,7 +126,6 @@ const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
           depth: formData.dimensions.depth ? parseFloat(formData.dimensions.depth) : 0
         }
       };
-
       await onSubmit(submissionData);
       toast.success(artwork ? 'Artwork updated successfully' : 'Artwork created successfully');
     } catch (error) {
