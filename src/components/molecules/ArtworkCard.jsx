@@ -39,18 +39,18 @@ const ArtworkCard = ({ artwork, onClick }) => {
         </div>
       </div>
       
-      <div className="p-4">
+<div className="p-4">
         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-secondary transition-colors">
           {title}
         </h3>
         
         <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
-          <span>{format(new Date(date), 'MMM d, yyyy')}</span>
-          <span className="text-xs">{formatDimensions(dimensions)}</span>
+          <span>{date ? format(new Date(date), 'MMM d, yyyy') : 'No date'}</span>
+          <span className="text-xs">{formatDimensions(dimensions || {})}</span>
         </div>
         
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500 truncate flex-1">{owner}</span>
+          <span className="text-sm text-gray-500 truncate flex-1">{owner || 'Unknown'}</span>
           {collection && (
             <Badge color={collection.color} className="ml-2 flex-shrink-0">
               {collection.name}
