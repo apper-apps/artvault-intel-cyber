@@ -127,8 +127,74 @@ export const artworkService = {
     }
     
     return filteredArtworks.map(artwork => ({
-      ...artwork,
-      collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
+collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
     }));
+  },
+
+  async bulkUpload(artworksData, onProgress = null) {
+    const results = {
+      successful: [],
+      failed: [],
+      total: artworksData.length
+    };
+
+    for (let i = 0; i < artworksData.length; i++) {
+      const artworkData = artworksData[i];
+      
+      try {
+        // Simulate upload delay for each file
+        await delay(800 + Math.random() * 400); // 0.8-1.2s per file
+        
+        const newArtwork = {
+          ...artworkData,
+          Id: Math.max(...artworks.map(a => a.Id)) + 1,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        artworks.push(newArtwork);
+        
+        // Update collection artwork count
+        const collection = collections.find(c => c.Id === parseInt(artworkData.collectionId));
+        if (collection) {
+          collection.artworkCount += 1;
+        }
+        
+        results.successful.push({
+          artwork: newArtwork,
+          originalIndex: i
+        });
+        
+        // Call progress callback if provided
+        if (onProgress) {
+          onProgress({
+            completed: i + 1,
+            total: artworksData.length,
+            currentFile: artworkData.title || `File ${i + 1}`,
+            progress: ((i + 1) / artworksData.length) * 100
+          });
+        }
+        
+      } catch (error) {
+        results.failed.push({
+          artwork: artworkData,
+          originalIndex: i,
+          error: error.message
+        });
+        
+        // Still call progress callback for failed uploads
+        if (onProgress) {
+          onProgress({
+            completed: i + 1,
+            total: artworksData.length,
+            currentFile: artworkData.title || `File ${i + 1}`,
+            progress: ((i + 1) / artworksData.length) * 100,
+            error: error.message
+          });
+        }
+      }
+    }
+    
+    return results;
   }
 };
