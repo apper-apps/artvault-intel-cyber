@@ -17,6 +17,8 @@ import AddArtwork from '@/components/pages/AddArtwork';
 import ArtworkGallery from '@/components/pages/ArtworkGallery';
 import EditArtwork from '@/components/pages/EditArtwork';
 import Collections from '@/components/pages/Collections';
+import CollectionForm from '@/components/pages/CollectionForm';
+import CollectionDetail from '@/components/pages/CollectionDetail';
 
 // Create auth context
 export const AuthContext = createContext(null);
@@ -129,10 +131,13 @@ function AppContent() {
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
             <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-            <Route path="/" element={<ArtworkGallery />} />
+<Route path="/" element={<ArtworkGallery />} />
             <Route path="/add" element={<AddArtwork />} />
             <Route path="/edit/:id" element={<EditArtwork />} />
             <Route path="/collections" element={<Collections />} />
+            <Route path="/collections/new" element={<CollectionForm />} />
+            <Route path="/collections/edit/:id" element={<CollectionForm />} />
+            <Route path="/collections/:id" element={<CollectionDetail />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>

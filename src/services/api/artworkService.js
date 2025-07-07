@@ -1,4 +1,7 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
+import Error from "@/components/ui/Error";
+import { create, getAll, getById, update } from "@/services/api/userService";
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -301,10 +304,84 @@ export const artworkService = {
       }
       
       return true;
+return true;
     } catch (error) {
       console.error("Error deleting artwork:", error);
       toast.error("Failed to delete artwork");
       return false;
+    }
+
+  async getByCollectionId(collectionId) {
+    await delay(300);
+    try {
+      // Initialize ApperClient with Project ID and Public Key
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "media_url" } },
+          { field: { Name: "media_type" } },
+          { field: { Name: "thumbnail_url" } },
+          { field: { Name: "date" } },
+          { field: { Name: "dimensions_width" } },
+          { field: { Name: "dimensions_height" } },
+          { field: { Name: "dimensions_depth" } },
+          { field: { Name: "dimensions_unit" } },
+          { field: { Name: "notes" } },
+          { field: { Name: "collection_id" } },
+          { field: { Name: "artist_id" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "Owner" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "ModifiedOn" } }
+        ],
+        where: [
+          {
+            FieldName: "collection_id",
+            Operator: "EqualTo",
+            Values: [parseInt(collectionId)]
+          }
+        ]
+      };
+      
+      const response = await apperClient.fetchRecords('artwork', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return [];
+      }
+      
+      // Transform data to match UI expectations
+      return (response.data || []).map(artwork => ({
+        Id: artwork.Id,
+        title: artwork.title || '',
+        mediaUrl: artwork.media_url || '',
+        mediaType: artwork.media_type || 'image',
+        thumbnailUrl: artwork.thumbnail_url || '',
+        date: artwork.date || '',
+        dimensions: {
+          width: artwork.dimensions_width || 0,
+          height: artwork.dimensions_height || 0,
+          depth: artwork.dimensions_depth || 0,
+          unit: artwork.dimensions_unit || 'inches'
+        },
+        notes: artwork.notes || '',
+        collectionId: artwork.collection_id?.toString() || '',
+        owner: artwork.Owner || '',
+        createdAt: artwork.CreatedOn || '',
+        updatedAt: artwork.ModifiedOn || ''
+      }));
+    } catch (error) {
+console.error("Error fetching artworks by collection:", error);
+      toast.error("Failed to load collection artworks");
+      return [];
     }
   }
 };
