@@ -11,7 +11,7 @@ import { collectionService } from '@/services/api/collectionService';
 import { useAuth } from '@/context/AuthContext';
 const ArtworkForm = ({ artwork, onSubmit, onCancel, loading }) => {
 const { user } = useAuth();
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     title: '',
     mediaUrl: '',
     mediaType: 'image',
@@ -39,7 +39,7 @@ const { user } = useAuth();
 
   useEffect(() => {
 if (artwork) {
-      setFormData({
+setFormData({
         title: artwork.title || '',
         mediaUrl: artwork.mediaUrl || '',
         mediaType: artwork.mediaType || 'image',

@@ -1,200 +1,310 @@
-import artworksData from '../mockData/artworks.json';
-import collectionsData from '../mockData/collections.json';
-
-let artworks = [...artworksData];
-let collections = [...collectionsData];
+import { toast } from 'react-toastify';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const artworkService = {
   async getAll() {
     await delay(300);
-    return artworks.map(artwork => ({
-      ...artwork,
-      collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
-    }));
+    try {
+      // Initialize ApperClient with Project ID and Public Key
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "media_url" } },
+          { field: { Name: "media_type" } },
+          { field: { Name: "thumbnail_url" } },
+          { field: { Name: "date" } },
+          { field: { Name: "dimensions_width" } },
+          { field: { Name: "dimensions_height" } },
+          { field: { Name: "dimensions_depth" } },
+          { field: { Name: "dimensions_unit" } },
+          { field: { Name: "notes" } },
+          { field: { Name: "collection_id" } },
+          { field: { Name: "artist_id" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "Owner" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "ModifiedOn" } }
+        ]
+      };
+      
+      const response = await apperClient.fetchRecords('artwork', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return [];
+      }
+      
+      // Transform data to match UI expectations
+      return (response.data || []).map(artwork => ({
+        Id: artwork.Id,
+        title: artwork.title || '',
+        mediaUrl: artwork.media_url || '',
+        mediaType: artwork.media_type || 'image',
+        thumbnailUrl: artwork.thumbnail_url || '',
+        date: artwork.date || '',
+        dimensions: {
+          width: artwork.dimensions_width || 0,
+          height: artwork.dimensions_height || 0,
+          depth: artwork.dimensions_depth || 0,
+          unit: artwork.dimensions_unit || 'inches'
+        },
+        notes: artwork.notes || '',
+        collectionId: artwork.collection_id?.toString() || '',
+        owner: artwork.Owner || '',
+        createdAt: artwork.CreatedOn || '',
+        updatedAt: artwork.ModifiedOn || ''
+      }));
+    } catch (error) {
+      console.error("Error fetching artworks:", error);
+      toast.error("Failed to load artworks");
+      return [];
+    }
   },
 
   async getById(id) {
     await delay(200);
-    const artwork = artworks.find(a => a.Id === parseInt(id));
-    if (!artwork) return null;
-    
-    return {
-      ...artwork,
-      collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
-    };
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "media_url" } },
+          { field: { Name: "media_type" } },
+          { field: { Name: "thumbnail_url" } },
+          { field: { Name: "date" } },
+          { field: { Name: "dimensions_width" } },
+          { field: { Name: "dimensions_height" } },
+          { field: { Name: "dimensions_depth" } },
+          { field: { Name: "dimensions_unit" } },
+          { field: { Name: "notes" } },
+          { field: { Name: "collection_id" } },
+          { field: { Name: "artist_id" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "Owner" } },
+          { field: { Name: "CreatedOn" } },
+          { field: { Name: "ModifiedOn" } }
+        ]
+      };
+      
+      const response = await apperClient.getRecordById('artwork', parseInt(id), params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+      
+      const artwork = response.data;
+      if (!artwork) return null;
+      
+      return {
+        Id: artwork.Id,
+        title: artwork.title || '',
+        mediaUrl: artwork.media_url || '',
+        mediaType: artwork.media_type || 'image',
+        thumbnailUrl: artwork.thumbnail_url || '',
+        date: artwork.date || '',
+        dimensions: {
+          width: artwork.dimensions_width || 0,
+          height: artwork.dimensions_height || 0,
+          depth: artwork.dimensions_depth || 0,
+          unit: artwork.dimensions_unit || 'inches'
+        },
+        notes: artwork.notes || '',
+        collectionId: artwork.collection_id?.toString() || '',
+        owner: artwork.Owner || '',
+        createdAt: artwork.CreatedOn || '',
+        updatedAt: artwork.ModifiedOn || ''
+      };
+    } catch (error) {
+      console.error(`Error fetching artwork with ID ${id}:`, error);
+      toast.error("Failed to load artwork");
+      return null;
+    }
   },
 
   async create(artworkData) {
     await delay(400);
-    const newArtwork = {
-      ...artworkData,
-      Id: Math.max(...artworks.map(a => a.Id)) + 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    artworks.push(newArtwork);
-    
-    // Update collection artwork count
-    const collection = collections.find(c => c.Id === parseInt(artworkData.collectionId));
-    if (collection) {
-      collection.artworkCount += 1;
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      
+      // Only include updateable fields
+      const params = {
+        records: [{
+          title: artworkData.title || '',
+          media_url: artworkData.mediaUrl || '',
+          media_type: artworkData.mediaType || 'image',
+          thumbnail_url: artworkData.thumbnailUrl || '',
+          date: artworkData.date || '',
+          dimensions_width: parseFloat(artworkData.dimensions?.width) || 0,
+          dimensions_height: parseFloat(artworkData.dimensions?.height) || 0,
+          dimensions_depth: parseFloat(artworkData.dimensions?.depth) || 0,
+          dimensions_unit: artworkData.dimensions?.unit || 'inches',
+          notes: artworkData.notes || '',
+          collection_id: artworkData.collectionId ? parseInt(artworkData.collectionId) : null,
+          artist_id: artworkData.artistId ? parseInt(artworkData.artistId) : null,
+          Tags: '',
+          Owner: artworkData.owner || ''
+        }]
+      };
+      
+      const response = await apperClient.createRecord('artwork', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        if (successfulRecords.length > 0) {
+          return successfulRecords[0].data;
+        }
+      }
+      
+      throw new Error('Failed to create artwork');
+    } catch (error) {
+      console.error("Error creating artwork:", error);
+      throw error;
     }
-    
-    return newArtwork;
   },
 
   async update(id, artworkData) {
     await delay(300);
-    const index = artworks.findIndex(a => a.Id === parseInt(id));
-    if (index === -1) return null;
-    
-    const oldCollectionId = artworks[index].collectionId;
-    const newCollectionId = artworkData.collectionId;
-    
-    artworks[index] = {
-      ...artworks[index],
-      ...artworkData,
-      Id: parseInt(id),
-      updatedAt: new Date().toISOString()
-    };
-    
-    // Update collection counts if collection changed
-    if (oldCollectionId !== newCollectionId) {
-      const oldCollection = collections.find(c => c.Id === parseInt(oldCollectionId));
-      const newCollection = collections.find(c => c.Id === parseInt(newCollectionId));
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
       
-      if (oldCollection) oldCollection.artworkCount -= 1;
-      if (newCollection) newCollection.artworkCount += 1;
+      // Only include updateable fields plus Id
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          title: artworkData.title || '',
+          media_url: artworkData.mediaUrl || '',
+          media_type: artworkData.mediaType || 'image',
+          thumbnail_url: artworkData.thumbnailUrl || '',
+          date: artworkData.date || '',
+          dimensions_width: parseFloat(artworkData.dimensions?.width) || 0,
+          dimensions_height: parseFloat(artworkData.dimensions?.height) || 0,
+          dimensions_depth: parseFloat(artworkData.dimensions?.depth) || 0,
+          dimensions_unit: artworkData.dimensions?.unit || 'inches',
+          notes: artworkData.notes || '',
+          collection_id: artworkData.collectionId ? parseInt(artworkData.collectionId) : null,
+          artist_id: artworkData.artistId ? parseInt(artworkData.artistId) : null,
+          Tags: '',
+          Owner: artworkData.owner || ''
+        }]
+      };
+      
+      const response = await apperClient.updateRecord('artwork', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        if (successfulUpdates.length > 0) {
+          return successfulUpdates[0].data;
+        }
+      }
+      
+      throw new Error('Failed to update artwork');
+    } catch (error) {
+      console.error("Error updating artwork:", error);
+      throw error;
     }
-    
-    return artworks[index];
   },
 
   async delete(id) {
     await delay(250);
-    const index = artworks.findIndex(a => a.Id === parseInt(id));
-    if (index === -1) return false;
-    
-    const artwork = artworks[index];
-    const collection = collections.find(c => c.Id === parseInt(artwork.collectionId));
-    if (collection) {
-      collection.artworkCount -= 1;
-    }
-    
-    artworks.splice(index, 1);
-    return true;
-  },
-
-  async searchArtworks(query) {
-    await delay(200);
-    const searchQuery = query.toLowerCase();
-    return artworks.filter(artwork => 
-      artwork.title.toLowerCase().includes(searchQuery) ||
-      artwork.notes.toLowerCase().includes(searchQuery) ||
-      artwork.owner.toLowerCase().includes(searchQuery)
-    ).map(artwork => ({
-      ...artwork,
-      collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
-    }));
-  },
-
-  async filterArtworks(filters) {
-    await delay(200);
-    let filteredArtworks = [...artworks];
-    
-    if (filters.collectionId) {
-      filteredArtworks = filteredArtworks.filter(a => a.collectionId === filters.collectionId);
-    }
-    
-    if (filters.owner) {
-      filteredArtworks = filteredArtworks.filter(a => 
-        a.owner.toLowerCase().includes(filters.owner.toLowerCase())
-      );
-    }
-    
-    if (filters.dateFrom) {
-      filteredArtworks = filteredArtworks.filter(a => 
-        new Date(a.date) >= new Date(filters.dateFrom)
-      );
-    }
-    
-    if (filters.dateTo) {
-      filteredArtworks = filteredArtworks.filter(a => 
-        new Date(a.date) <= new Date(filters.dateTo)
-      );
-    }
-    
-    return filteredArtworks.map(artwork => ({
-collection: collections.find(c => c.Id === parseInt(artwork.collectionId))
-    }));
-  },
-
-  async bulkUpload(artworksData, onProgress = null) {
-    const results = {
-      successful: [],
-      failed: [],
-      total: artworksData.length
-    };
-
-    for (let i = 0; i < artworksData.length; i++) {
-      const artworkData = artworksData[i];
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
       
-      try {
-        // Simulate upload delay for each file
-        await delay(800 + Math.random() * 400); // 0.8-1.2s per file
-        
-        const newArtwork = {
-          ...artworkData,
-          Id: Math.max(...artworks.map(a => a.Id)) + 1,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        
-        artworks.push(newArtwork);
-        
-        // Update collection artwork count
-        const collection = collections.find(c => c.Id === parseInt(artworkData.collectionId));
-        if (collection) {
-          collection.artworkCount += 1;
-        }
-        
-        results.successful.push({
-          artwork: newArtwork,
-          originalIndex: i
-        });
-        
-        // Call progress callback if provided
-        if (onProgress) {
-          onProgress({
-            completed: i + 1,
-            total: artworksData.length,
-            currentFile: artworkData.title || `File ${i + 1}`,
-            progress: ((i + 1) / artworksData.length) * 100
-          });
-        }
-        
-      } catch (error) {
-        results.failed.push({
-          artwork: artworkData,
-          originalIndex: i,
-          error: error.message
-        });
-        
-        // Still call progress callback for failed uploads
-        if (onProgress) {
-          onProgress({
-            completed: i + 1,
-            total: artworksData.length,
-            currentFile: artworkData.title || `File ${i + 1}`,
-            progress: ((i + 1) / artworksData.length) * 100,
-            error: error.message
-          });
-        }
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+      
+      const response = await apperClient.deleteRecord('artwork', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return false;
       }
+      
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`);
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        return successfulDeletions.length > 0;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error deleting artwork:", error);
+      toast.error("Failed to delete artwork");
+      return false;
     }
-    
-    return results;
   }
 };

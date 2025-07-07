@@ -3,19 +3,21 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ApperIcon from '@/components/ApperIcon';
 import Button from '@/components/atoms/Button';
-import { useAuth } from '@/context/AuthContext';
+import { useSelector } from 'react-redux';
+import { AuthContext } from '../App';
+import { useContext } from 'react';
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+const { user } = useSelector((state) => state.user);
+  const { logout } = useContext(AuthContext);
   const [showUserMenu, setShowUserMenu] = useState(false);
-const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname === path;
 
   const handleLogout = async () => {
     await logout();
     setShowUserMenu(false);
-    navigate('/');
   };
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm">

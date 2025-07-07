@@ -1,171 +1,47 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
+import { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import { useAuth } from '@/context/AuthContext';
+import { AuthContext } from '../App';
 
-const Login = () => {
-  const navigate = useNavigate();
-  const { login } = useAuth();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+function Login() {
+  const { isInitialized } = useContext(AuthContext);
+  
+  useEffect(() => {
+    if (isInitialized) {
+      // Show login UI in this component
+      const { ApperUI } = window.ApperSDK;
+      ApperUI.showLogin("#authentication");
     }
-
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      toast.error('Please fix the errors below');
-      return;
-    }
-
-    setLoading(true);
-    
-    try {
-      await login(formData.email, formData.password);
-      toast.success('Login successful!');
-      navigate('/');
-    } catch (error) {
-      toast.error(error.message || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
+  }, [isInitialized]);
+  
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full space-y-8"
-      >
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center space-x-3 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-secondary to-indigo-600 rounded-lg flex items-center justify-center">
-              <ApperIcon name="Palette" className="w-6 h-6 text-white" />
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="w-full max-w-md space-y-8 p-8 bg-white rounded-lg shadow-md">
+        <div className="flex flex-col gap-6 items-center justify-center">
+          <div className="w-14 h-14 shrink-0 rounded-xl flex items-center justify-center bg-gradient-to-r from-secondary to-indigo-600 text-white text-2xl 2xl:text-3xl font-bold">
+            A
+          </div>
+          <div className="flex flex-col gap-1 items-center justify-center">
+            <div className="text-center text-lg xl:text-xl font-bold">
+              Sign in to ArtVault
             </div>
-            <span className="text-2xl font-display font-bold text-gray-900">
-              ArtVault
-            </span>
-          </Link>
-          <h2 className="text-3xl font-display font-bold text-gray-900">
-            Welcome back
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your artist account
+            <div className="text-center text-sm text-gray-500">
+              Welcome back, please sign in to continue
+            </div>
+          </div>
+        </div>
+        <div id="authentication" />
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link to="/register" className="font-medium text-secondary hover:text-indigo-500">
+              Sign up
+            </Link>
           </p>
         </div>
-
-<motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ 
-            delay: 0.1,
-            duration: 0.3,
-            ease: [0.4, 0, 0.2, 1],
-            type: "tween"
-          }}
-          style={{
-            transform: 'translateZ(0)',
-            willChange: 'transform, opacity',
-            backfaceVisibility: 'hidden'
-          }}
-          className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 resize-observer-optimized"
-        >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              error={errors.email}
-              placeholder="Enter your email"
-              autoComplete="email"
-            />
-
-            <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              error={errors.password}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-            />
-
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={loading}
-              className="w-full flex items-center justify-center space-x-2"
-            >
-              {loading ? (
-                <>
-                  <ApperIcon name="Loader2" className="w-4 h-4 animate-spin" />
-                  <span>Signing in...</span>
-                </>
-              ) : (
-                <>
-                  <ApperIcon name="LogIn" className="w-4 h-4" />
-                  <span>Sign in</span>
-                </>
-              )}
-            </Button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link
-                  to="/register"
-                  className="font-medium text-secondary hover:text-indigo-500 transition-colors"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </div>
-          </form>
-        </motion.div>
-
-        <div className="text-center">
-          <p className="text-xs text-gray-500">
-            Demo credentials: sarah@example.com / password123
-          </p>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
-};
+}
 
 export default Login;

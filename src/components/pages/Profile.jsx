@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import TextArea from '@/components/atoms/TextArea';
-import { useAuth } from '@/context/AuthContext';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import TextArea from "@/components/atoms/TextArea";
+import { updateProfile } from "@/services/userService";
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user } = useSelector((state) => state.user);
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
