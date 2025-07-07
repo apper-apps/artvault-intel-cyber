@@ -1,7 +1,7 @@
 import { useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ApperIcon from '@/components/ApperIcon';
-import { AuthContext } from '../App';
+import { AuthContext } from '@/App';
 
 function Register() {
   const { isInitialized } = useContext(AuthContext);

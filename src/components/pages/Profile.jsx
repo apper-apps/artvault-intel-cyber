@@ -6,7 +6,7 @@ import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import TextArea from "@/components/atoms/TextArea";
-import { updateProfile } from "@/services/userService";
+import { updateProfile } from "@/services/api/userService";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);

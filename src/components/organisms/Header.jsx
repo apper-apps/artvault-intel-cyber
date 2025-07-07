@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import ApperIcon from '@/components/ApperIcon';
 import Button from '@/components/atoms/Button';
 import { useSelector } from 'react-redux';
-import { AuthContext } from '../App';
+import { AuthContext } from '@/App';
 import { useContext } from 'react';
 
 const Header = () => {
