@@ -5,18 +5,7 @@ import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 
 const ArtworkCard = ({ artwork, onClick }) => {
-  // Safe destructuring with fallback values to prevent null/undefined errors
-  const {
-    title = '',
-    thumbnailUrl = '',
-    date = null,
-    dimensions = null,
-    owner = '',
-    collection = null,
-    mediaType = 'image'
-  } = artwork || {};
-
-// Early return if artwork is null/undefined to prevent React errors
+  // Early return if artwork is null/undefined to prevent React errors
   if (!artwork || typeof artwork !== 'object') {
     return (
       <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
@@ -46,11 +35,13 @@ const ArtworkCard = ({ artwork, onClick }) => {
   const title = artwork.title || artwork.Name || 'Untitled';
   const mediaUrl = artwork.media_url || artwork.mediaUrl || '';
   const thumbnailUrl = artwork.thumbnail_url || artwork.thumbnailUrl || mediaUrl;
-  const date = artwork.date || artwork.createdAt || '';
+  const artworkDate = artwork.date || artwork.createdAt || '';
   const notes = artwork.notes || '';
-  const owner = artwork.Owner?.Name || artwork.owner || '';
+  const ownerName = artwork.Owner?.Name || artwork.owner || '';
   const tags = artwork.Tags || artwork.tags || '';
-
+  const dimensions = artwork.dimensions || null;
+  const collection = artwork.collection || null;
+  const mediaType = artwork.mediaType || 'image';
   return (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
@@ -82,12 +73,12 @@ const ArtworkCard = ({ artwork, onClick }) => {
         </h3>
         
 <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
-          <span>{date ? format(new Date(date), 'MMM d, yyyy') : 'No date'}</span>
+          <span>{artworkDate ? format(new Date(artworkDate), 'MMM d, yyyy') : 'No date'}</span>
           <span className="text-xs">{formatDimensions(dimensions)}</span>
         </div>
         
 <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500 truncate flex-1">{owner || 'Unknown'}</span>
+          <span className="text-sm text-gray-500 truncate flex-1">{ownerName || 'Unknown'}</span>
           {collection && collection.name && (
             <Badge color={collection.color || 'gray'} className="ml-2 flex-shrink-0">
               {collection.name}
